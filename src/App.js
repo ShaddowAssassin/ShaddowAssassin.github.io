@@ -533,31 +533,32 @@ const renderNextPiece = () => {
 };
 
 return (
-  <div style={styles.container}>
-    <div style={styles.wrapper}>
-      <h1 style={styles.title}>TETRIS</h1>
-      <div style={styles.gameLayout}>
-        <div style={styles.boardContainer}>
-          <div style={styles.gameBoard}>
-            {renderBoard().map((row, y) =>
-              row.map((cell, x) => (
-                <div
-                  key={`${y}-${x}`}
-                  style={{
-                    ...styles.boardCell,
-                    backgroundColor: cell || '#1a1a1a'
-                  }}
-                />
-              ))
-            )}
+    <div style={styles.container}>
+      <div style={styles.wrapper}>
+        <h1 style={styles.title}>TETRIS</h1>
+        <div style={styles.gameLayout}>
+          <div style={styles.boardContainer}>
+            <div style={styles.gameBoard}>
+              {renderBoard().map((row, y) =>
+                row.map((cell, x) => (
+                  <div
+                    key={`${y}-${x}`}
+                    style={{
+                      ...styles.boardCell,
+                      backgroundColor: cell || '#1a1a1a',
+                    }}
+                  />
+                ))
+              )}
+            </div>
+            {/* overlays when paused or gameOver */}
           </div>
-          {/* overlays and other UI */}
+          {/* side panels for next piece, score, controls, mobile layout */}
         </div>
-        {/* info panels, controls, mobile layout, etc */}
       </div>
     </div>
-  </div>
-);
+  );
+}
 
             
             {gameOver && (
