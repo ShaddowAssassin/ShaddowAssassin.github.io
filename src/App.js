@@ -458,9 +458,11 @@ export default function TetrisGame() {
           e.preventDefault();
           dropPiece();
           break;
-        case 'p':
         case 'P':
           togglePause();
+          break;
+        default:
+          // do nothing
           break;
       }
     };
