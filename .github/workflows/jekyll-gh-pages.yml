@@ -27,23 +27,19 @@ jobs:
         with:
           node-version: '18.19.1'
           cache: 'npm'
-          # No cache-dependency-path because package-lock.json is at repo root
+          # Removed cache-dependency-path since package-lock.json is at repo root
 
       - name: Install React dependencies
-        run: |
-          cd react-app
-          npm ci
+        run: npm ci
 
       - name: Build React app
-        run: |
-          cd react-app
-          npm run build
+        run: npm run build
 
       - name: Copy React build into Jekyll site
         run: |
           rm -rf public/react
           mkdir -p public/react
-          cp -r react-app/build/* public/react/
+          cp -r build/* public/react/
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
