@@ -64,6 +64,9 @@ jobs:
       name: github-pages
       url: ${{ steps.publish.outputs.page_url }}
     steps:
+      - name: Verify package-lock.json exists
+        run: ls -la react-app/package-lock.json
+
       - name: Deploy to GitHub Pages
         id: publish
         uses: bitovi/github-actions-react-to-github-pages@v1.2.4
