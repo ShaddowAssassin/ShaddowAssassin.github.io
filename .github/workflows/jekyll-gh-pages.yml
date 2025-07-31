@@ -19,6 +19,8 @@ jobs:
   build:
     name: Build Site
     runs-on: ubuntu-latest
+    outputs:
+      artifact_name: github-pages
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -35,7 +37,7 @@ jobs:
       - name: Build React app
         run: npm run build
 
-      - name: Copy React build into Jekyll site
+      - name: Copy React into Jekyll site
         run: |
           rm -rf public/react
           mkdir -p public/react
@@ -56,6 +58,11 @@ jobs:
           name: github-pages
           path: ./_site
 
+      - name: Debug - list contents of built site
+        run: |
+          echo "Contents of _site:"
+          ls -R ./_site
+
   deploy:
     name: Deploy to GitHub Pages
     needs: build
@@ -69,6 +76,6 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v4
         with:
           artifact_name: github-pages
