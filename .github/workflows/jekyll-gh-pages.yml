@@ -16,9 +16,10 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-
+    outputs:
+      deploy_id: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
@@ -26,7 +27,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18.19.1'
+          node-version: '18.x'
           cache: 'npm'
 
       - name: Install React dependencies
@@ -51,15 +52,21 @@ jobs:
           destination: ./_site
 
       - name: Upload build artifact
-        id: upload-artifact
+        id: upload
         uses: actions/upload-pages-artifact@v3
         with:
-          name: github-pages
           path: ./_site
+          name: github-pages
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ needs.build.outputs.deploy_id }}
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
         with:
           artifact_name: github-pages
-          token: ${{ secrets.GITHUB_TOKEN }}
