@@ -508,31 +508,6 @@ const togglePause = useCallback(() => {
   return displayBoard;
 };
 
- const renderBoard = () => {
-  const displayBoard = board.map(row => [...row]);
-
-  if (currentPiece && !gameOver) {
-    for (let y = 0; y < currentPiece.shape.length; y++) {
-      for (let x = 0; x < currentPiece.shape[y].length; x++) {
-        if (currentPiece.shape[y][x]) {
-          const boardY = currentPiece.y + y;
-          const boardX = currentPiece.x + x;
-          if (
-            boardY >= 0 &&
-            boardY < BOARD_HEIGHT &&
-            boardX >= 0 &&
-            boardX < BOARD_WIDTH
-          ) {
-            displayBoard[boardY][boardX] = currentPiece.color;
-          }
-        }
-      }
-    }
-  }
-
-  return displayBoard;
-};
-
 const renderNextPiece = () => {
   const gridSize = 4;
   const grid = Array(gridSize)
