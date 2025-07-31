@@ -41,6 +41,9 @@ jobs:
           mkdir -p public/react
           cp -r build/* public/react/
 
+      - name: Create .nojekyll file
+        run: touch public/react/.nojekyll
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
@@ -67,10 +70,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Create .nojekyll file
-        run: |
-          touch ./_site/.nojekyll
-
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
