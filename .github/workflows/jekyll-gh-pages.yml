@@ -22,15 +22,12 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Verify package-lock.json exists
-        run: ls -la react-app/package-lock.json
-
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18.19.1'
           cache: 'npm'
-          cache-dependency-path: 'react-app/package-lock.json'
+          # No cache-dependency-path because package-lock.json is at repo root
 
       - name: Install React dependencies
         run: |
