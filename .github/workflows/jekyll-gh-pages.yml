@@ -1,7 +1,9 @@
-name: Deploy to GitHub Pages
+name: Deploy Jekyll & React Site to GitHub Pages
+
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -15,22 +17,47 @@ concurrency:
 
 jobs:
   build:
+    name: Build Site
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Build site
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build React app
+        run: npm run build
+
+      - name: Copy React build into Jekyll site
         run: |
-          # your build commands
+          rm -rf public/react
+          mkdir -p public/react
+          cp -r build/* public/react/
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
-      - name: Upload artifact
+
+      - name: Build Jekyll site
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./_site
+
+      - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:
           name: github-pages
           path: ./_site
 
   deploy:
+    name: Deploy to GitHub Pages
     needs: build
     runs-on: ubuntu-latest
     permissions:
