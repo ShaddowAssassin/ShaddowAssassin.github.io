@@ -431,16 +431,16 @@ export default function TetrisGame() {
     setGameStarted(true);
   };
 
-  const togglePause = () => {
+const togglePause = useCallback(() => {
     if (gameStarted && !gameOver) {
       setIsPaused(prev => !prev);
     }
-  };
+  }, [gameStarted, gameOver]);
 
   useEffect(() => {
     const handleKeyPress = (e) => {
       if (!gameStarted) return;
-      
+
       switch (e.key) {
         case 'ArrowLeft':
           movePiece(-1, 0);
@@ -462,29 +462,26 @@ export default function TetrisGame() {
           togglePause();
           break;
         default:
-          // do nothing
           break;
       }
     };
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [movePiece, rotatePieceHandler, dropPiece, gameStarted]);
+  }, [movePiece, rotatePieceHandler, dropPiece, gameStarted, togglePause]);
 
   useEffect(() => {
     if (!gameStarted || gameOver || isPaused) return;
-    
+
     const dropInterval = Math.max(100, 1000 - (level - 1) * 100);
     const interval = setInterval(() => {
       movePiece(0, 1);
     }, dropInterval);
 
     return () => clearInterval(interval);
-  }, [movePiece, level, gameOver, isPaused, gameStarted]);
-
-  const renderBoard = () => {
-    const displayBoard = board.map(row => [...row]);
-    
+  }, [movePiece, level, gameStarted, gameOver, isPaused, togglePause]);
+}
+   
     // Draw current piece
     if (currentPiece && !gameOver) {
       for (let y = 0; y < currentPiece.shape.length; y++) {
