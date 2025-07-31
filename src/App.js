@@ -508,47 +508,82 @@ const togglePause = useCallback(() => {
   return displayBoard;
 };
 
-  const renderNextPiece = () => {
-    const gridSize = 4;
-    const grid = Array(gridSize).fill().map(() => Array(gridSize).fill(EMPTY_CELL));
-    
-    if (nextPiece) {
-      const offsetY = Math.floor((gridSize - nextPiece.shape.length) / 2);
-      const offsetX = Math.floor((gridSize - nextPiece.shape[0].length) / 2);
-      
-      for (let y = 0; y < nextPiece.shape.length; y++) {
-        for (let x = 0; x < nextPiece.shape[y].length; x++) {
-          if (nextPiece.shape[y][x]) {
-            grid[offsetY + y][offsetX + x] = nextPiece.color;
+ const renderBoard = () => {
+  const displayBoard = board.map(row => [...row]);
+
+  if (currentPiece && !gameOver) {
+    for (let y = 0; y < currentPiece.shape.length; y++) {
+      for (let x = 0; x < currentPiece.shape[y].length; x++) {
+        if (currentPiece.shape[y][x]) {
+          const boardY = currentPiece.y + y;
+          const boardX = currentPiece.x + x;
+          if (
+            boardY >= 0 &&
+            boardY < BOARD_HEIGHT &&
+            boardX >= 0 &&
+            boardX < BOARD_WIDTH
+          ) {
+            displayBoard[boardY][boardX] = currentPiece.color;
           }
         }
       }
     }
-    
-    return grid;
-  };
+  }
 
-  return (
-    <div style={styles.container}>
-      <div style={styles.wrapper}>
-        <h1 style={styles.title}>TETRIS</h1>
-        
-        <div style={styles.gameLayout}>
-          {/* Game Board */}
-          <div style={styles.boardContainer}>
-            <div style={styles.gameBoard}>
-              {renderBoard().map((row, y) => 
-                row.map((cell, x) => (
-                  <div 
-                    key={`${y}-${x}`} 
-                    style={{
-                      ...styles.boardCell,
-                      backgroundColor: cell || '#1a1a1a'
-                    }}
-                  />
-                ))
-              )}
-            </div>
+  return displayBoard;
+};
+
+const renderNextPiece = () => {
+  const gridSize = 4;
+  const grid = Array(gridSize)
+    .fill()
+    .map(() => Array(gridSize).fill(EMPTY_CELL));
+
+  if (nextPiece) {
+    const offsetY = Math.floor((gridSize - nextPiece.shape.length) / 2);
+    const offsetX = Math.floor(
+      (gridSize - nextPiece.shape[0].length) / 2
+    );
+
+    for (let y = 0; y < nextPiece.shape.length; y++) {
+      for (let x = 0; x < nextPiece.shape[y].length; x++) {
+        if (nextPiece.shape[y][x]) {
+          grid[offsetY + y][offsetX + x] = nextPiece.color;
+        }
+      }
+    }
+  }
+
+  return grid;
+};
+
+return (
+  <div style={styles.container}>
+    <div style={styles.wrapper}>
+      <h1 style={styles.title}>TETRIS</h1>
+      <div style={styles.gameLayout}>
+        <div style={styles.boardContainer}>
+          <div style={styles.gameBoard}>
+            {renderBoard().map((row, y) =>
+              row.map((cell, x) => (
+                <div
+                  key={`${y}-${x}`}
+                  style={{
+                    ...styles.boardCell,
+                    backgroundColor: cell || '#1a1a1a'
+                  }}
+                />
+              ))
+            )}
+          </div>
+          {/* overlays and other UI */}
+        </div>
+        {/* info panels, controls, mobile layout, etc */}
+      </div>
+    </div>
+  </div>
+);
+
             
             {gameOver && (
               <div style={styles.overlay}>
