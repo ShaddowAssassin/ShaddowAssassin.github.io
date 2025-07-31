@@ -63,9 +63,6 @@ jobs:
           echo "Contents of _site:"
           ls -R ./_site
 
-      - name: Add nojekyll flag
-        run: touch ./_site/.nojekyll
-
 
   deploy:
     name: Deploy to GitHub Pages
