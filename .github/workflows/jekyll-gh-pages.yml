@@ -1,8 +1,8 @@
-name: Deploy React Site to GitHub Pages
+name: Deploy React & Jekyll Site to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   workflow_dispatch:
 
 permissions:
@@ -20,7 +20,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: '18.x'
           cache: npm
@@ -31,7 +32,7 @@ jobs:
       - name: Build React app
         run: npm run build
 
-      - name: Copy built React files
+      - name: Move React build to public/react
         run: |
           rm -rf public/react
           mkdir -p public/react
@@ -42,12 +43,13 @@ jobs:
 
       - uses: actions/configure-pages@v5
 
-      - uses: actions/build-pages@v1
+      - name: Build Jekyll site
+        uses: actions/jekyll-build-pages@v1
         with:
           source: ./
           destination: ./_site
 
-      - name: Upload site artifact
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./_site
@@ -63,6 +65,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
+        name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
         with:
           artifact_name: github-pages
