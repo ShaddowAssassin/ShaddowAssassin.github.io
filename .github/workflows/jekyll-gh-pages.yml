@@ -25,8 +25,9 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'   # adjust version as needed
+          node-version: '18'
           cache: 'npm'
+          cache-dependency-path: 'react-app/package-lock.json'
 
       - name: Install React dependencies
         run: |
